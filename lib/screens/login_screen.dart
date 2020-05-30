@@ -33,12 +33,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    CustomTextField(
-                      hint: 'E-mail',
-                      prefix: Icon(Icons.account_circle),
-                      textInputType: TextInputType.emailAddress,
-                      onChanged: loginStore.setEmail,
-                      enabled: true,
+                    Observer(
+                      builder: (_){
+                        return CustomTextField(
+                          hint: 'E-mail',
+                          prefix: Icon(Icons.account_circle),
+                          textInputType: TextInputType.emailAddress,
+                          onChanged: loginStore.setEmail,
+                          enabled: loginStore.loading ? false : true, //bloquear o campo enquanto estiver processando o login
+                        );
+                      }
                     ),
                     const SizedBox(height: 16,),
                     Observer(
@@ -48,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           prefix: Icon(Icons.lock),
                           obscure: loginStore.showPass ? false : true,
                           onChanged: loginStore.setPassword,
-                          enabled: true,
+                          enabled: loginStore.loading ? false : true, //bloquear o campo enquanto estiver processando o login
                           suffix: CustomIconButton(
                             radius: 32,
                             iconData: loginStore.showPass ? Icons.visibility_off : Icons.visibility,
@@ -66,15 +70,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(32),
                             ),
-                            child: Text('Login'),
+                            child: loginStore.loading ? 
+                                CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation(Colors.white ),
+                                ) : Text('Login'),
                             color: Theme.of(context).primaryColor,
                             disabledColor: Theme.of(context).primaryColor.withAlpha(100),
                             textColor: Colors.white,
-                            onPressed: loginStore.isFormValid ? (){ //verifica se o form eh valido (computed)
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(builder: (context)=>ListScreen())
-                              ) ;
-                            } : null, //retorna nulo para on pressed pq ai desativara o botao (ele ficara clarinho)
+                            onPressed: loginStore.loginPressed,//retorna nulo para on pressed pq ai desativara o botao (ele ficara clarinho)
                           ),
                         );
                       }
