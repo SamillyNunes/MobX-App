@@ -45,7 +45,11 @@ abstract class _LoginStore with Store{
     await Future.delayed(Duration(seconds: 2));
 
     loading=false;
+    loggedIn=true;
   }
+
+  @observable
+  bool loggedIn = false;
 
   //usado para combinar alguns observables. AO utiliza-lo, sempre tem que declarar um getter
   //eh basicamente uma operacao com observables e retornando um novo valor
