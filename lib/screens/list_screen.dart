@@ -16,6 +16,8 @@ class _ListScreenState extends State<ListScreen> {
 
   ListStore listStore = ListStore();
 
+  final TextEditingController controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -63,12 +65,18 @@ class _ListScreenState extends State<ListScreen> {
                         Observer(
                           builder: (_){
                             return CustomTextField(
+                              controller: controller,
                               hint: 'Tarefa',
                               onChanged: listStore.setNewTodoTitle,
                               suffix: listStore.isFormValid ? CustomIconButton(
                                 radius: 32,
                                 iconData: Icons.add,
-                                onTap: listStore.addTodo,
+                                onTap: (){
+                                  listStore.addTodo();
+                                  WidgetsBinding.instance.addPostFrameCallback( //executa a funcao que tiver dentro quando terminar de renderizar os widgets, isso por causa de um bug do flutter
+                                    (_)=>controller.clear()
+                                  ); 
+                                },
                               ) : null,
                             );
                           }
@@ -80,13 +88,22 @@ class _ListScreenState extends State<ListScreen> {
                               return ListView.separated(
                                 itemCount: listStore.todoList.length,
                                 itemBuilder: (_, index){
-                                  return ListTile(
-                                    title: Text(
-                                      listStore.todoList[index],
-                                    ),
-                                    onTap: (){
 
-                                    },
+                                  final todo = listStore.todoList[index]; //pegando a tarefa pra facilitar
+
+                                  return Observer( //outro observer pq eh um arquivo diferente
+                                    builder: (_){
+                                      return ListTile(
+                                        title: Text(
+                                          todo.title,
+                                          style: TextStyle(
+                                            decoration: todo.done ? TextDecoration.lineThrough : null, //se tiver concluido, ele vai riscar o texto
+                                            color: todo.done ? Colors.grey : Colors.black  
+                                          ),
+                                        ),
+                                        onTap: todo.toggleDone, //vai dizer q ta concluido
+                                      );
+                                    }
                                   );
                                 },
                                 separatorBuilder: (_, __){

@@ -1,4 +1,5 @@
 import 'package:mobx/mobx.dart';
+import 'package:todomobx/stores/todo_store.dart';
 
 part 'list_store.g.dart';
 
@@ -21,11 +22,11 @@ abstract class _ListStore with Store{
   //so que adiciona ou remove itens, entao n esta modificando o estado dele
   // @observable
   // List<String> todoList = List();
-  ObservableList<String> todoList = ObservableList<String>();// essa lista eh INTERNAMENTE observavel
+  ObservableList<TodoStore> todoList = ObservableList<TodoStore>();// essa lista eh INTERNAMENTE observavel
 
   @action
   void addTodo(){ //acao para quando tocar no botao e ele vai pegar o que ja tem no input e adicionar na lista
-    todoList.add(newTodoTitle);
-    print(todoList);
+    todoList.insert(0,new TodoStore(newTodoTitle));
+    newTodoTitle=""; //pra que o icone de add suma depois 
   }
 }
