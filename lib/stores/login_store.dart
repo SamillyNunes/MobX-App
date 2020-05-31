@@ -51,6 +51,14 @@ abstract class _LoginStore with Store{
   @observable
   bool loggedIn = false;
 
+  @action
+  void logout(){
+    loggedIn=false;
+
+    email="";
+    password="";
+  }
+
   //usado para combinar alguns observables. AO utiliza-lo, sempre tem que declarar um getter
   //eh basicamente uma operacao com observables e retornando um novo valor
   // @computed 

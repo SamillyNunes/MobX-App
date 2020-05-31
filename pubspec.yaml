@@ -25,6 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   mobx: ^1.2.1 
   flutter_mobx: ^1.1.0 # prove o widget observer para o mobx que vai rebuildar automaticamente quand houverem mudancas
+  provider: ^4.0.5+1
 
 
 dev_dependencies:
